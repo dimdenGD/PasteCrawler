@@ -13,8 +13,8 @@ function createWindow () {
     frame: false
   })
 
-  win.loadFile('index.html');
-  win.setIcon(path.join(__dirname, './icon.png'));
+  win.loadFile('./static/index.html');
+  win.setIcon(path.join(__dirname, './static/icon.png'));
 }
 
 app.on('ready', createWindow)

@@ -66,3 +66,12 @@ body {
     image-rendering: auto;
     position: absolute;
 }
+
+#menu {
+    left: 0;
+    top: 35px;
+    position: fixed;
+    height: 100%;
+    width: 170px;
+    background-color: #101010;
+}

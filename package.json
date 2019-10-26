@@ -22,5 +22,8 @@
   "homepage": "https://github.com/dimdenGD/PasteCrawler#readme",
   "devDependencies": {
     "electron": "^7.0.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^5.4.3"
   }
 }
