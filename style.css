@@ -1,0 +1,63 @@
+#top {
+    -webkit-app-region: drag;
+    margin: 0;
+    display: block;
+    width: 100%;
+    height: 35px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #0e0e0e;
+}
+
+#title {
+    position: absolute;
+    top: 1px;
+    left: 39px;
+    font-size: 28px;
+    font-family: Teko;
+    margin: -3px;
+    color: white;
+}
+
+#control-btns {
+    top: 4px;
+    right: 5px;
+    position: absolute;
+}
+
+.ctrl-btn {
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-app-region: no-drag;
+    border: none;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+#exit:hover {
+    background-color: #ff3d3d;
+}
+.ctrl-btn:hover {
+    background-color: #2e2e2e;
+    cursor: pointer;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1e1e1e;
+}
+
+#logo {
+    left: 5px;
+    top: 3px;
+    width: 28px;
+    height: 28px;
+    image-rendering: auto;
+    position: absolute;
+}

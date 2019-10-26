@@ -1,0 +1,26 @@
+{
+  "name": "pastecrawler",
+  "version": "1.0.0",
+  "description": "Paste crawler to find some valuable stuff.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimdenGD/PasteCrawler.git"
+  },
+  "keywords": [
+    "paste",
+    "crawler"
+  ],
+  "author": "dimden",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dimdenGD/PasteCrawler/issues"
+  },
+  "homepage": "https://github.com/dimdenGD/PasteCrawler#readme",
+  "devDependencies": {
+    "electron": "^7.0.0"
+  }
+}
