@@ -12,7 +12,7 @@
 
 #title {
     position: absolute;
-    top: 1px;
+    top: 2px;
     left: 39px;
     font-size: 28px;
     font-family: Teko;
@@ -30,12 +30,16 @@
     width: 25px;
     height: 25px;
     text-align: center;
-    padding: 0 !important;
-    margin: 0 !important;
     -webkit-app-region: no-drag;
     border: none;
     background-color: #1e1e1e;
     color: white;
+    vertical-align: bottom;
+    outline: none;
+}
+
+#exit {
+    margin-left: -1px;
 }
 
 #exit:hover {
@@ -51,6 +55,7 @@ body {
     width: 100%;
     height: 100%;
     background-color: #1e1e1e;
+    font-family: Be Vietnam;
 }
 
 #logo {
