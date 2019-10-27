@@ -1,6 +1,6 @@
 {
-    "useProxy": false,
-    "isDefault": true,
+    "useProxy": true,
+    "isDefault": false,
     "crawlPastebin": true,
     "crawlSlexy": true,
     "crawlPasteDebian": true,

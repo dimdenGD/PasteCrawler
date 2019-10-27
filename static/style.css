@@ -224,3 +224,11 @@ input {
     outline: none;
     color: lightgray;
 }
+
+#default {
+    color: lightcoral;
+    left: 150px;
+    top: 150px;
+    position: absolute;
+    width: 300px;
+}
