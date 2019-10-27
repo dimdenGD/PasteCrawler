@@ -44,7 +44,18 @@
                 <br>
                 <textarea id="proxy-area"></textarea>
             </div>
-            <div id="window-filters" class="win" hidden></div>
+            <div id="window-filters" class="win" hidden>
+                <div id="filter-win">
+                    <span>Add Regex filter: </span><br>
+                    <span style="color: lightsalmon">/</span><input value="[a-z]" id="filter"><span style="color: lightsalmon">/</span><input id="filter-tags" value="g"><br>
+                    <button id="add-filter">Add</button>
+                    <div style="max-height: 300px; overflow-y: scroll; width: 450px;">
+                        <table>
+                                <tbody id="filters"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <div id="window-results" class="win" hidden></div>
             <div id="window-options" class="win" hidden>
                 <div id="options">

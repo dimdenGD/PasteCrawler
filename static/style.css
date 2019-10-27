@@ -238,3 +238,45 @@ input {
     position: absolute;
     width: 300px;
 }
+
+#filter-win {
+    color: white;
+    left: 30px;
+    top: 10px;
+    position: absolute;
+    width: 800px;
+}
+
+#filter, #filter-tags {
+    background-color: #1e1e1e;
+}
+
+#filter {
+    color: lightgreen;
+    width: 300px;
+}
+
+#filter-tags {
+    color: lightskyblue;
+}
+
+#add-filter {
+    margin-top: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: #505050;
+    color: white;
+    padding: 5px, 5px, 2px, 2px;
+    font-family: Be Vietnam;
+    outline: none;
+    cursor: pointer;
+}
+
+#add-filter:hover {
+    background-color: #404040;
+}
+
+#filters {
+    border: solid gray 1px;
+    width: 400px;
+}

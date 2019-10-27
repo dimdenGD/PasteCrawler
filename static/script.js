@@ -115,3 +115,37 @@ geti('proxy-delimiter').addEventListener("change", () => {
 })
 
 geti("default").hidden = !config.isDefault;
+
+geti("add-filter").addEventListener("click", () => {
+    addFilter(`/${geti("filter").value}/${geti("filter-tags").value}`);
+})
+
+function addFilter(regex) {
+    const tr = document.createElement("tr");
+    const cm = document.createElement("input");
+    const td1 = document.createElement("td");
+    const td2 = document.createElement("td");
+    const rg = document.createElement("span");
+    rg.textContent = regex;
+    cm.type = "checkbox";
+    cm.checked = config.filters[regex];
+    config.filters[regex] = false;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    cm.onchange = () => {
+        config.filters[regex] = cm.checked;
+        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    };
+    td1.appendChild(cm);
+    td2.appendChild(rg);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.id = `regex-${regex}`;
+    tr.oncontextmenu = () => {
+        delete config.filters[regex];
+        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+        tr.remove();
+    }
+    geti("filters").appendChild(tr);
+};
+
+for(let i in config.filters) addFilter(i);

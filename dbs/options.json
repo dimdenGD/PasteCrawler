@@ -1,4 +1,5 @@
 {
+    "_COMMENT": "DON'T CHANGE ANYTHING HERE IF YOU DON'T KNOW HOW IT WORKS",
     "useProxy": false,
     "isDefault": true,
     "proxyType": "http",
@@ -7,6 +8,6 @@
     "crawlPasteDebian": true,
     "customWebsites": [],
     "proxyDelimiter": "\n",
-    "filters": [],
+    "filters": {},
     "maxLog": 256
 }
