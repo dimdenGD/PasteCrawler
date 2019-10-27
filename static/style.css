@@ -190,19 +190,23 @@ body {
     color: lightcoral;
 }
 
-#proxy-type, #proxy-area, #proxy-type-option {
+#proxy-type, #proxy-area, #proxy-type-option, #result {
     top: 10px;
     left: 30px;
     background-color: #232323;
     border: none;
     color: white;
     font-family: Be Vietnam;
-    font-size: 18px;
     outline: none;
     position: absolute;
 }
 
-#proxy-type-option {
+#result {
+    width: 450px;
+    height: 200px;
+}
+
+#proxy-type-option, #result {
     top: unset;
     left: unset;
     position: unset;
@@ -279,4 +283,24 @@ input {
 #filters {
     border: solid gray 1px;
     width: 400px;
+}
+
+#res-win {
+    left: 30px;
+    top: 10px;
+    position: absolute;
+    color: white;
+    width: 800px;
+}
+
+#res-win > select {
+    background-color: #131313;
+    border: none;
+    color: lightgray;
+    font-family: Be Vietnam;
+    outline: none;
+}
+
+#res-page {
+    width: 50px;
 }

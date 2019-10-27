@@ -20,13 +20,6 @@ geti('exit').addEventListener('click', () => {
     remote.app.quit();
 });
 
-class PasteCrawler {
-    constructor(options = {}) {
-        this.crawled = 0;
-        this.collected = 0;
-    }
-};
-
 const menu = ["home", "proxies", "filters", "results", "options"];
 
 for(let i of menu) {
@@ -121,6 +114,8 @@ geti("add-filter").addEventListener("click", () => {
 })
 
 function addFilter(regex) {
+    if(config.filters[regex]) return;
+    new RegExp(regex.split("/")[1], regex.split("/")[2]);
     const tr = document.createElement("tr");
     const cm = document.createElement("input");
     const td1 = document.createElement("td");
@@ -149,3 +144,37 @@ function addFilter(regex) {
 };
 
 for(let i in config.filters) addFilter(i);
+for(let i in config.runs) {
+    const option = document.createElement("option");
+    option.textContent = i;
+}
+
+geti("table-name").addEventListener("change", () => {
+    if(geti("table-name").value === "None") {
+        geti("res-length").textContent = "0";
+        geti("result").textContent = "";
+        return;
+    }
+    const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value}`).all();
+    geti("res-length").textContent = res.length;
+    console.log(res);
+    geti("result").textContent = res.join("\n");
+})
+
+geti("res-page").addEventListener("change", () => {
+    if(geti("table-name").value === "None") {
+        geti("res-length").textContent = "0";
+        geti("result").textContent = "";
+        return;
+    }
+    const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value}`).all();
+    console.log(res);
+    geti("result").textContent = res.join("\n");
+})
+
+class PasteCrawler {
+    constructor(options = {}) {
+        this.crawled = 0;
+        this.collected = 0;
+    }
+};

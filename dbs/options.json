@@ -9,5 +9,6 @@
     "customWebsites": [],
     "proxyDelimiter": "\n",
     "filters": {},
-    "maxLog": 256
+    "maxLog": 256,
+    "runs": {}
 }
