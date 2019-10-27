@@ -1,3 +1,5 @@
 node_modules/
 .vscode/
 icon.pdn
+dbs/db.db
+dbs/res.db

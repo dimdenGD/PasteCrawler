@@ -75,3 +75,102 @@ body {
     width: 170px;
     background-color: #101010;
 }
+
+.menu-btn {
+    position: relative;
+    width: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-family: Be Vietnam;
+    background-color: #101010;
+    outline: none;
+}
+
+.menu-btn:hover {
+    cursor: pointer;
+    background-color: #202020;
+}
+
+.selected {
+    background-color: #1e1e1e;
+}
+
+.win {
+    position: fixed;
+    top: 35px;
+    left: 170px;
+}
+
+#status {
+    font-size: 40px;
+    font-family: Be Vietnam;
+    left: 30px;
+    top: 10px;
+    position: absolute;
+}
+
+.on {
+    color: #88ff88;
+}
+
+.off {
+    color: #ff1111;
+}
+
+#stat {
+    font-family: Be Vietnam;
+    left: 30px;
+    top: 75px;
+    color: gray;
+    position: absolute;
+    width: 200px;
+}
+
+#log {
+    left: 30px;
+    top: 200px;
+    background-color: #232323;
+    width: 550px;
+    height: 300px;
+    overflow-y: scroll;
+    position: absolute;
+    color: darkgray;
+    font-family: monospace;
+}
+
+::-webkit-scrollbar {
+    background-color: #505050;
+}
+
+#start, #stop {
+    font-size: 16px;
+    position: absolute;
+    left: 30px;
+    top: 150px;
+    border: none;
+    background-color: #505050;
+    color: white;
+    padding: 5px, 5px, 2px, 2px;
+    font-family: Be Vietnam;
+    outline: none;
+    cursor: pointer;
+}
+
+#stop {
+    left: 90px;
+}
+
+#start:disabled, #stop:disabled {
+    color: gray;
+}
+
+#start:hover {
+    color: lightgreen;
+}
+
+#stop:hover {
+    color: lightcoral;
+}

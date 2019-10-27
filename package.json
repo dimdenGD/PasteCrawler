@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/dimdenGD/PasteCrawler#readme",
   "devDependencies": {
-    "electron": "^7.0.0"
+    "electron": "^7.0.0",
+    "electron-rebuild": "^1.8.6"
   },
   "dependencies": {
     "better-sqlite3": "^5.4.3"

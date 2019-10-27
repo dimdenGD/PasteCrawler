@@ -14,7 +14,30 @@
                 <button class="ctrl-btn" id="exit">✖</button>
             </div>
         </div>
-        <div id="menu"></div>
+        <div id="menu">
+            <button id="menu-home" class="menu-btn selected">Home</button>
+            <button id="menu-proxies" class="menu-btn">Proxies</button>
+            <button id="menu-filters" class="menu-btn">Filters</button>
+            <button id="menu-results" class="menu-btn">Results</button>
+            <button id="menu-options" class="menu-btn">Options</button>
+        </div>
+        <div id="windows">
+            <div id="window-home" class="win">
+                <span id="status" class="off">OFFLINE</span>
+                <div id="stat">
+                    <span id="total-pastes">Total Pastes: 0</span><br>
+                    <span id="total-matches">Total Matches: 0</span><br>
+                    <span id="total-time">Total Time: 0:0:0:0</span><br>
+                </div>
+                <button id="start">Start</button>
+                <button id="stop" disabled>Stop</button>
+                <div id="log"></div>
+            </div>
+            <div id="window-proxies" class="win" hidden></div>
+            <div id="window-filters" class="win" hidden></div>
+            <div id="window-results" class="win" hidden></div>
+            <div id="window-options" class="win" hidden></div>
+        </div>
         <script src="./script.js"></script>
     </body>
 </html>

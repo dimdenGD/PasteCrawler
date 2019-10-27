@@ -1,1 +1,8 @@
-{}
+{
+    "useProxy": false,
+    "isDefault": true,
+    "crawlPastebin": false,
+    "crawlSlexy": false,
+    "crawlPasteDebian": false,
+    "customWebsites": []
+}
