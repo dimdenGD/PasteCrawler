@@ -45,7 +45,17 @@
             </div>
             <div id="window-filters" class="win" hidden></div>
             <div id="window-results" class="win" hidden></div>
-            <div id="window-options" class="win" hidden></div>
+            <div id="window-options" class="win" hidden>
+                <div id="options">
+                    <label>Use proxy: <input id="use-proxy" type="checkbox"></label><br>
+                    <label>Crawl Pastebin: <input id="crawl-pastebin" type="checkbox"></label><br>
+                    <label>Crawl Slexy: <input id="crawl-slexy" type="checkbox"></label><br>
+                    <label>Crawl PasteDebian: <input id="crawl-pastedebian" type="checkbox"></label><br>
+                    <label>Proxy delimiter: <input id="proxy-delimiter"></label><br>
+                    <label>Max log count: <input id="max-log" type="number"></label><br>
+                    <label>Custom websites (separated by ", "): <input id="custom-websites"></label><br>
+                </div>
+            </div>
         </div>
         <script src="./script.js"></script>
     </body>

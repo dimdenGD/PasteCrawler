@@ -1,9 +1,9 @@
 {
     "useProxy": false,
     "isDefault": true,
-    "crawlPastebin": false,
-    "crawlSlexy": false,
-    "crawlPasteDebian": false,
+    "crawlPastebin": true,
+    "crawlSlexy": true,
+    "crawlPasteDebian": true,
     "customWebsites": [],
     "proxyDelimiter": "\n",
     "filters": [],

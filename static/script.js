@@ -55,3 +55,40 @@ geti("proxy-type").addEventListener("change", () => {
 geti("proxy-area").addEventListener("change", () => {
     fs.writeFileSync(path.join(__dirname, `../dbs/proxy/${v.toLowerCase()}.txt`), geti('proxy-area').value)
 })
+
+geti('use-proxy').checked = config.useProxy;
+geti('use-proxy').addEventListener("change", () => {
+    config.useProxy = geti('use-proxy').checked;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti('crawl-pastebin').checked = config.crawlPastebin;
+geti('crawl-pastebin').addEventListener("change", () => {
+    config.crawlPastebin = geti('crawl-pastebin').checked;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti('crawl-slexy').checked = config.crawlSlexy;
+geti('crawl-slexy').addEventListener("change", () => {
+    config.crawlSlexy = geti('crawl-slexy').checked;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti("crawl-pastedebian").checked = config.crawlPasteDebian;
+geti('crawl-pastedebian').addEventListener("change", () => {
+    config.crawlPasteDebian = geti('crawl-pastedebian').checked;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti('custom-websites').value = config.customWebsites.join(", ");
+geti('custom-websites').addEventListener("change", () => {
+    config.customWebsites = geti('custom-websites').value.split(", ");
+    if(config.customWebsites.length === 1) if(config.customWebsites[0] === "") config.customWebsites = [];
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti('max-log').value = config.maxLog;
+geti('max-log').addEventListener("change", () => {
+    config.maxLog = +geti('max-log').value;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti('proxy-delimiter').value = config.proxyDelimiter.replace("\n", "\\n");
+geti('proxy-delimiter').addEventListener("change", () => {
+    config.proxyDelimiter = geti('proxy-delimiter').value.replace("\\n", "\n");
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})

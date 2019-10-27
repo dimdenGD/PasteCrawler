@@ -208,3 +208,19 @@ body {
     height: 200px;
     width: 450px;
 }
+
+#options {
+    left: 30px;
+    top: 10px;
+    position: absolute;
+    color: lightgray;
+    width: 600px;
+}
+
+input {
+    border: none;
+    background-color: #131313;
+    padding: 3px;
+    outline: none;
+    color: lightgray;
+}
