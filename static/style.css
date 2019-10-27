@@ -142,7 +142,22 @@ body {
 }
 
 ::-webkit-scrollbar {
-    background-color: #505050;
+    background-color: #121212;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar-button {
+    background-color: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #404040;
+}
+
+::-webkit-scrollbar-corner {
+    background-color: #121212;
+    border: none;
+    outline: none;
 }
 
 #start, #stop {
@@ -173,4 +188,23 @@ body {
 
 #stop:hover {
     color: lightcoral;
+}
+
+#proxy-type, #proxy-area {
+    top: 10px;
+    left: 30px;
+    background-color: #232323;
+    border: none;
+    color: white;
+    font-family: Be Vietnam;
+    font-size: 18px;
+    outline: none;
+    position: absolute;
+}
+
+#proxy-area {
+    top: 60px;
+    font-size: 14px;
+    height: 200px;
+    width: 450px;
 }

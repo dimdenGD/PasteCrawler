@@ -4,5 +4,8 @@
     "crawlPastebin": false,
     "crawlSlexy": false,
     "crawlPasteDebian": false,
-    "customWebsites": []
+    "customWebsites": [],
+    "proxyDelimiter": "\n",
+    "filters": [],
+    "maxLog": 256
 }

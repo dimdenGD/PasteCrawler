@@ -2,12 +2,9 @@ const { remote } = require('electron');
 const betterSQLite3 = require("better-sqlite3");
 const path = require("path");
 const db = betterSQLite3(path.join(__dirname, "../dbs/db.db"));
-const res = betterSQLite3(path.join(__dirname, "../dbs/res.db"));
 const geti = i => document.getElementById(i);
 const config = require("../dbs/options.json");
-
-db.prepare(/*sql*/`create table if not exists proxies (proxy text primary key, type text)`).run();
-db.prepare(/*sql*/`create table if not exists filters (fname text primary key, filter text )`).run();
+const fs = require("fs");
 
 geti('minimize').addEventListener('click', () => {
     remote.getCurrentWindow().minimize();
@@ -42,3 +39,19 @@ for(let i of menu) {
         geti(`window-${i}`).hidden = false;
     })
 }
+
+fs.readFile(path.join(__dirname, "../dbs/proxy/http.txt"), "utf8", (err, data) => {
+    geti('proxy-area').value = data;
+})
+let v = "HTTP";
+
+geti("proxy-type").addEventListener("change", () => {
+    v = geti('proxy-type').value;
+    fs.readFile(path.join(__dirname, `../dbs/proxy/${v.toLowerCase()}.txt`), "utf8", (err, data) => {
+        geti('proxy-area').value = data;
+    })
+})
+
+geti("proxy-area").addEventListener("change", () => {
+    fs.writeFileSync(path.join(__dirname, `../dbs/proxy/${v.toLowerCase()}.txt`), geti('proxy-area').value)
+})

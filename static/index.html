@@ -33,7 +33,16 @@
                 <button id="stop" disabled>Stop</button>
                 <div id="log"></div>
             </div>
-            <div id="window-proxies" class="win" hidden></div>
+            <div id="window-proxies" class="win" hidden>
+                <select id="proxy-type">
+                    <option>HTTP</option>
+                    <option>HTTPS</option>
+                    <option>SOCKS4</option>
+                    <option>SOCKS5</option>
+                </select>
+                <br>
+                <textarea id="proxy-area"></textarea>
+            </div>
             <div id="window-filters" class="win" hidden></div>
             <div id="window-results" class="win" hidden></div>
             <div id="window-options" class="win" hidden></div>
