@@ -84,6 +84,13 @@ geti('crawl-pastedebian').addEventListener("change", () => {
     geti("default").hidden = true;
     fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
 })
+geti("proxy-type-option").value = config.proxyType;
+geti('proxy-type-option').addEventListener("change", () => {
+    config.proxyType = geti('proxy-type-option').value;
+    config.isDefault = false;
+    geti("default").hidden = true;
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+})
 geti('custom-websites').value = config.customWebsites.join(", ");
 geti('custom-websites').addEventListener("change", () => {
     config.isDefault = false;

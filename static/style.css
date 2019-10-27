@@ -190,7 +190,7 @@ body {
     color: lightcoral;
 }
 
-#proxy-type, #proxy-area {
+#proxy-type, #proxy-area, #proxy-type-option {
     top: 10px;
     left: 30px;
     background-color: #232323;
@@ -200,6 +200,12 @@ body {
     font-size: 18px;
     outline: none;
     position: absolute;
+}
+
+#proxy-type-option {
+    top: unset;
+    left: unset;
+    position: unset;
 }
 
 #proxy-area {
