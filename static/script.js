@@ -5,6 +5,8 @@ const db = betterSQLite3(path.join(__dirname, "../dbs/db.db"));
 const geti = i => document.getElementById(i);
 const config = require("../dbs/options.json");
 const fs = require("fs");
+const fetch = require("node-fetch");
+const HTMLParser = require("node-html-parser");
 
 geti('minimize').addEventListener('click', () => {
     remote.getCurrentWindow().minimize();
@@ -110,11 +112,11 @@ geti('proxy-delimiter').addEventListener("change", () => {
 geti("default").hidden = !config.isDefault;
 
 geti("add-filter").addEventListener("click", () => {
-    addFilter(`/${geti("filter").value}/${geti("filter-tags").value}`);
+    addFilter(`/${geti("filter").value}/${geti("filter-tags").value}`, true);
 })
 
-function addFilter(regex) {
-    if(config.filters[regex]) return;
+function addFilter(regex, FS) {
+    if(FS && config.filters[regex]) return;
     new RegExp(regex.split("/")[1], regex.split("/")[2]);
     const tr = document.createElement("tr");
     const cm = document.createElement("input");
@@ -124,8 +126,10 @@ function addFilter(regex) {
     rg.textContent = regex;
     cm.type = "checkbox";
     cm.checked = config.filters[regex];
-    config.filters[regex] = false;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    if(FS) {
+        config.filters[regex] = false;
+        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    }
     cm.onchange = () => {
         config.filters[regex] = cm.checked;
         fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
@@ -147,34 +151,172 @@ for(let i in config.filters) addFilter(i);
 for(let i in config.runs) {
     const option = document.createElement("option");
     option.textContent = i;
+    geti("table-name").appendChild(option);
 }
 
 geti("table-name").addEventListener("change", () => {
     if(geti("table-name").value === "None") {
         geti("res-length").textContent = "0";
-        geti("result").textContent = "";
+        geti("result").value = "";
         return;
     }
     const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value}`).all();
     geti("res-length").textContent = res.length;
     console.log(res);
-    geti("result").textContent = res.join("\n");
+    let str = "";
+    for(let i in res) str += `${res[i].data1} - ${res[i].from1} - ${res[i].regex}\n`;
+    geti("result").value = str;
 })
 
 geti("res-page").addEventListener("change", () => {
     if(geti("table-name").value === "None") {
         geti("res-length").textContent = "0";
-        geti("result").textContent = "";
+        geti("result").value = "";
         return;
     }
-    const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value}`).all();
-    console.log(res);
-    geti("result").textContent = res.join("\n");
+    const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value*10}`).all();
+    let str = "";
+    for(let i in res) str += `${res[i].data1} - ${res[i].from1} - ${res[i].regex}\n`;
+    geti("result").value = str;
+})
+
+let bot;
+
+geti("start").addEventListener("click", () => {
+    bot = new PasteCrawler(config);
+    geti("start").disabled = true;
+    geti("stop").disabled = false;
+})
+
+geti("stop").addEventListener("click", () => {
+    bot.destruct();
+    bot = undefined;
 })
 
 class PasteCrawler {
-    constructor(options = {}) {
+    constructor(options) {
+        const PasteCrawler = this;
+        this.options = options;
         this.crawled = 0;
-        this.collected = 0;
+        this.matches = 0;
+        this.regexes = [];
+        this.date = Date.now();
+        this.websites = options.customWebsites;
+        this.options.filters = filter(this.options.filters, i => i);
+        if(Object.keys(this.options.filters).length === 0) return this.log("No filters.");
+        for(let i in this.options.filters) this.regexes.push(regexify(i));
+        this.regex = this.regexes[0];
+        this.tableName = Date.now() + "-" + this.regex.toString();
+        db.prepare(/*sql*/`create table "${this.tableName}" (data1 text, from1 text, regex text)`).run();
+        this.query = db.prepare(/*sql*/`insert into "${this.tableName}" (data1, from1, regex) values (?, ?, ?)`);
+        geti("status").textContent = "0/0";
+        geti("status").className = "on";
+
+        config.runs[this.tableName] = 1;
+        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+
+        const option = document.createElement("option");
+        option.textContent = this.tableName;
+        geti("table-name").appendChild(option);
+        
+        function crawl() {
+            if(options.crawlPastebin) PasteCrawler.crawlPastebin();
+            if(options.crawlSlexy) PasteCrawler.crawlSlexy();
+            if(options.crawlPasteDebian) PasteCrawler.crawlPasteDebian();
+            if(PasteCrawler.websites.length > 0) PasteCrawler.crawlCustomWebsites();
+        };
+
+
+        crawl();
+        this.int = setInterval(crawl, 60000);
     }
-};
+    crawlPastebin() {
+
+    }
+    crawlSlexy() {
+
+    }
+    crawlPasteDebian() {
+
+    }
+    crawlCustomWebsites() {
+        for(let i in this.websites) {
+            this.crawled++;
+            this.update();
+            this.log(`Crawling ${this.websites[i]}...`);
+            fetch(this.websites[i]).then(res => res.text()) 
+            .then(html => {
+                for(let j in this.regexes) {
+                    let matches = HTMLParser.parse(html).childNodes[2].structuredText.match(this.regexes[j]);
+                    if(!matches) matches = [];
+                    this.matches += matches.length;
+                    if(matches.length > 0) this.log(`Found ${matches.length} matches by ${this.regexes[j].toString()} regex.`);
+                    for(let k in matches) if(db.prepare(`select data1 from "${this.tableName}" where data1 = "${matches[k]}"`).all().length === 0) this.query.run(matches[k], this.websites[i], this.regexes[j].toString());
+                    this.update();
+                }
+            })
+        }
+    }
+    destruct() {
+        clearInterval(this.int);
+        geti("status").textContent = "OFFLINE";
+        geti("status").className = "off";
+        geti("start").disabled = false;
+        geti("stop").disabled = true;
+    }
+    log(msg) {
+        let v = geti("log").value;
+        if(v.split("\n").length > config.maxLog) v = v.split("\n").slice(1).join("\n");
+        geti("log").value = v.split("\n").concat(msg).filter(i => i).join("\n");
+        geti("log").scrollTop = geti("log").scrollHeight;
+    }
+    update() {
+        geti("status").textContent = `${this.matches}/${this.crawled}`;
+        geti("total-pastes").textContent = `Total Pastes: ${this.crawled}`;
+        geti("total-matches").textContent = `Total Matches: ${this.matches}`;
+        let time = new Date(Date.now() - this.date);
+        console.log(time);
+        geti("total-time").textContent = `Total Time: ${time.getUTCHours()}:${time.getMinutes()}:${time.getSeconds()}`;
+    }
+}
+
+function filter(obj, fn) {
+    const obj2 = {};
+    for(let i in obj) if(fn(obj[i])) obj2[i] = obj[i];
+    return obj2;
+}
+
+const regexify = str => {
+    const main = str.match(/\/(.+)\/.*/)[1];
+    const options = str.match(/\/.+\/(.*)/)[1];
+
+    return new RegExp(main, options);
+}
+
+geti("clean").addEventListener("click", () => {
+    if(!confirm("Are you sure that you want to delete everything?")) return;
+    fs.writeFileSync(path.join(__dirname, "../dbs/db.db"), "");
+    config.runs = {};
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    geti("table-name").innerHTML = "<option>None</option>";
+    geti("table-name").value = "None";
+    geti("result").value = "";
+    geti("res-length").textContent = "0";
+    if(bot) bot.destruct();
+});
+geti("delete").addEventListener("click", () => {
+    if(!confirm("Are you sure that you want to delete this table?")) return;
+    let tableName = geti("table-name").value;
+    if(tableName === "None") return;
+    delete config.runs[tableName];
+    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    db.prepare(`drop table if exists "${tableName}"`).run();
+    geti("table-name").value = "None";
+    Array.from(geti("table-name").children).forEach(i => {
+        console.log(i.textContent, tableName);
+        if(i.textContent === tableName) i.remove();
+    })
+    if(bot) if(bot.tableName === tableName) bot.destruct();
+    geti("result").value = "";
+    geti("res-length").textContent = "0";
+})

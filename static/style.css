@@ -139,6 +139,7 @@ body {
     position: absolute;
     color: darkgray;
     font-family: monospace;
+    border: none;
 }
 
 ::-webkit-scrollbar {
@@ -293,12 +294,21 @@ input {
     width: 800px;
 }
 
-#res-win > select {
+#res-win > select, #res-win > button {
     background-color: #131313;
     border: none;
     color: lightgray;
     font-family: Be Vietnam;
     outline: none;
+}
+
+#res-win > button:hover {
+    cursor: pointer;
+    background-color: #111111;
+}
+
+#clean:hover {
+    color: red;
 }
 
 #res-page {

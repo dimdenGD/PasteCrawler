@@ -1,14 +1,20 @@
 {
     "_COMMENT": "DON'T CHANGE ANYTHING HERE IF YOU DON'T KNOW HOW IT WORKS",
     "useProxy": false,
-    "isDefault": true,
+    "isDefault": false,
     "proxyType": "http",
     "crawlPastebin": true,
     "crawlSlexy": true,
     "crawlPasteDebian": true,
-    "customWebsites": [],
+    "customWebsites": [
+        "https://pastebin.com/8ifCiQ30"
+    ],
     "proxyDelimiter": "\n",
-    "filters": {},
+    "filters": {
+        "/class\\s[A-z]*\\s/g": true
+    },
     "maxLog": 256,
-    "runs": {}
+    "runs": {
+        "1572298053846-/class\\s[A-z]*\\s/g": 1
+    }
 }

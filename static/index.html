@@ -27,12 +27,12 @@
                 <div id="stat">
                     <span id="total-pastes">Total Pastes: 0</span><br>
                     <span id="total-matches">Total Matches: 0</span><br>
-                    <span id="total-time">Total Time: 0:0:0:0</span><br>
+                    <span id="total-time">Total Time: 0:0:0</span><br>
                 </div>
                 <button id="start">Start</button>
                 <button id="stop" disabled>Stop</button>
                 <span id="default">You have default options right now.</span>
-                <div id="log"></div>
+                <textarea id="log" readonly></textarea>
             </div>
             <div id="window-proxies" class="win" hidden>
                 <select id="proxy-type">
@@ -62,8 +62,9 @@
                     <select id="table-name">
                         <option>None</option>
                     </select>
-                    page <input type="number" id="res-page" value="0"> (<span id="res-length">0</span> results)<br><br>
-                    <textarea id="result"></textarea>
+                    page <input type="number" id="res-page" value="0"> (<span id="res-length">0</span> results) <button id="delete">DEL</button><br><br>
+                    <textarea id="result"></textarea><br>
+                    <button id="clean">Clean Everything</button>
                 </div>
             </div>
             <div id="window-options" class="win" hidden>

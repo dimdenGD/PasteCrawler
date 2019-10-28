@@ -25,6 +25,8 @@
     "electron-rebuild": "^1.8.6"
   },
   "dependencies": {
-    "better-sqlite3": "^5.4.3"
+    "better-sqlite3": "^5.4.3",
+    "node-fetch": "^2.6.0",
+    "node-html-parser": "^1.1.16"
   }
 }
