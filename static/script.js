@@ -6,7 +6,18 @@ const geti = i => document.getElementById(i);
 const config = require("../dbs/options.json");
 const fs = require("fs");
 const fetch = require("node-fetch");
-const HTMLParser = require("node-html-parser");
+const { JSDOM } = require("jsdom");
+const sanitizeHTML = require('sanitize-html');
+
+Object.defineProperty(global.Element.prototype, 'innerText', {
+    get() {
+      return sanitizeHTML(this.textContent, {
+        allowedTags: [],
+        allowedAttributes: {},
+      });
+    },
+    configurable: true,
+  });
 
 geti('minimize').addEventListener('click', () => {
     remote.getCurrentWindow().minimize();
@@ -162,7 +173,6 @@ geti("table-name").addEventListener("change", () => {
     }
     const res = db.prepare(`select * from "${geti("table-name").value}" limit 10 offset ${+geti("res-page").value}`).all();
     geti("res-length").textContent = res.length;
-    console.log(res);
     let str = "";
     for(let i in res) str += `${res[i].data1} - ${res[i].from1} - ${res[i].regex}\n`;
     geti("result").value = str;
@@ -203,7 +213,12 @@ class PasteCrawler {
         this.date = Date.now();
         this.websites = options.customWebsites;
         this.options.filters = filter(this.options.filters, i => i);
-        if(Object.keys(this.options.filters).length === 0) return this.log("No filters.");
+        if(Object.keys(this.options.filters).length === 0) {
+            this.destruct();
+            bot = undefined;
+            this.log("No filters.");
+            return;
+        }
         for(let i in this.options.filters) this.regexes.push(regexify(i));
         this.regex = this.regexes[0];
         this.tableName = Date.now() + "-" + this.regex.toString();
@@ -218,7 +233,6 @@ class PasteCrawler {
         const option = document.createElement("option");
         option.textContent = this.tableName;
         geti("table-name").appendChild(option);
-        console.log(PasteCrawler.websites);
         function crawl() {
             if(options.crawlPastebin) PasteCrawler.crawlPastebin();
             if(options.crawlSlexy) PasteCrawler.crawlSlexy();
@@ -248,7 +262,12 @@ class PasteCrawler {
             fetch(this.websites[i]).then(res => res.text()) 
             .then(html => {
                 for(let j in this.regexes) {
-                    let matches = HTMLParser.parse(html).childNodes[2].structuredText.match(this.regexes[j]);
+                    let dom = new JSDOM(html);
+                    let matches = sanitizeHTML(dom.window.document.body.textContent, {
+                        allowedTags: [],
+                        allowedAttributes: {},
+                      });
+                    matches = matches.match(this.regexes[j]);
                     if(!matches) matches = [];
                     this.matches += matches.length;
                     if(matches.length > 0) this.log(`Found ${matches.length} matches by ${this.regexes[j].toString()} regex.`);
@@ -285,7 +304,6 @@ class PasteCrawler {
         geti("total-pastes").textContent = `Total Pastes: ${this.crawled}`;
         geti("total-matches").textContent = `Total Matches: ${this.matches}`;
         let time = new Date(Date.now() - this.date);
-        console.log(time);
         geti("total-time").textContent = `Total Time: ${time.getUTCHours()}:${time.getMinutes()}:${time.getSeconds()}`;
     }
 }
@@ -323,7 +341,6 @@ geti("delete").addEventListener("click", () => {
     db.prepare(`drop table if exists "${tableName}"`).run();
     geti("table-name").value = "None";
     Array.from(geti("table-name").children).forEach(i => {
-        console.log(i.textContent, tableName);
         if(i.textContent === tableName) i.remove();
     })
     if(bot) if(bot.tableName === tableName) bot.destruct();
