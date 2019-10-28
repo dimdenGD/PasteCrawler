@@ -218,7 +218,7 @@ class PasteCrawler {
         const option = document.createElement("option");
         option.textContent = this.tableName;
         geti("table-name").appendChild(option);
-        
+        console.log(PasteCrawler.websites);
         function crawl() {
             if(options.crawlPastebin) PasteCrawler.crawlPastebin();
             if(options.crawlSlexy) PasteCrawler.crawlSlexy();
@@ -241,6 +241,7 @@ class PasteCrawler {
     }
     crawlCustomWebsites() {
         for(let i in this.websites) {
+            if(db.prepare(`select from1 from "${this.tableName}" where from1 = "${this.websites[i]}"`).all().length !== 0) return;
             this.crawled++;
             this.update();
             this.log(`Crawling ${this.websites[i]}...`);
@@ -253,6 +254,15 @@ class PasteCrawler {
                     if(matches.length > 0) this.log(`Found ${matches.length} matches by ${this.regexes[j].toString()} regex.`);
                     for(let k in matches) if(db.prepare(`select data1 from "${this.tableName}" where data1 = "${matches[k]}"`).all().length === 0) this.query.run(matches[k], this.websites[i], this.regexes[j].toString());
                     this.update();
+                    this.websites.splice(i, 1);
+                    if(this.websites.length === 0
+                    && !this.options.crawlSlexy
+                    && !this.options.crawlPastebin
+                    && !this.options.crawlPasteDebian) {
+                        bot.destruct();
+                        bot.log("Everything done.");
+                        bot = undefined;
+                    }
                 }
             })
         }

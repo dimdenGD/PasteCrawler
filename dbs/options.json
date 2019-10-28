@@ -3,18 +3,12 @@
     "useProxy": false,
     "isDefault": false,
     "proxyType": "http",
-    "crawlPastebin": true,
-    "crawlSlexy": true,
-    "crawlPasteDebian": true,
-    "customWebsites": [
-        "https://pastebin.com/8ifCiQ30"
-    ],
+    "crawlPastebin": false,
+    "crawlSlexy": false,
+    "crawlPasteDebian": false,
+    "customWebsites": [],
     "proxyDelimiter": "\n",
-    "filters": {
-        "/class\\s[A-z]*\\s/g": true
-    },
+    "filters": {},
     "maxLog": 256,
-    "runs": {
-        "1572298053846-/class\\s[A-z]*\\s/g": 1
-    }
+    "runs": {}
 }
