@@ -29,6 +29,7 @@
     "jsdom": "^15.2.0",
     "node-fetch": "^2.6.0",
     "proxy-agent": "^3.1.1",
-    "sanitize-html": "^1.20.1"
+    "sanitize-html": "^1.20.1",
+    "socks-proxy-agent": "^4.0.2"
   }
 }

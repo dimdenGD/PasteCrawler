@@ -263,10 +263,35 @@ class PasteCrawler {
 
 
         crawl();
-        this.int = setInterval(crawl, 60000);
+        this.int = setInterval(crawl, 15000);
     }
     crawlPastebin() {
-
+        const opt = {};
+        if(this.options.useProxy && proxies[this.options.proxyType].length > 0) opt.agent = new proxyAgent(`${this.options.proxyType}://${proxies[this.options.proxyType][Math.random() * proxies[this.options.proxyType].length>>0]}`);
+        fetch("https://pastebin.com/archive", opt).then(res => res.text())
+        .then(html => {
+            let links = html.match(/(?<=class\="i_p0" alt="" \/\>\<a href\=\")(.*)(?=\"\>)/g);
+            for(let i in links) {
+                if(db.prepare(`select from1 from "${this.tableName}" where from1 = "${`https://pastebin.com/raw${links[i]}`}"`).all().length !== 0) continue;
+                this.crawled++;
+                this.update();
+                this.log(`Crawling https://pastebin.com/raw${links[i]}...`);
+                if(this.options.useProxy && proxies[this.options.proxyType].length > 0) opt.agent = new proxyAgent(`${this.options.proxyType}://${proxies[this.options.proxyType][Math.random() * proxies[this.options.proxyType].length>>0]}`);
+                fetch(`https://pastebin.com/raw${links[i]}`, opt).then(res => res.text())
+                .then(data => {
+                    console.log(data);
+                    for(let j in this.regexes) {
+                        let matches = data.match(this.regexes[j]);
+                        if(!matches) matches = [];
+                        this.matches += matches.length;
+                        if(matches.length > 0) this.log(`Found ${matches.length} matches by ${this.regexes[j].toString()} regex.`);
+                        for(let k in matches) if(db.prepare(`select data1 from "${this.tableName}" where data1 = "${matches[k]}"`).all().length === 0) this.query.run(matches[k], `https://pastebin.com/raw${links[i]}`, this.regexes[j].toString());
+                        this.update();
+                        this.websites.splice(i, 1);
+                    }
+                })
+            }
+        }).catch(() => {this.log("Failed getting pastebin pastes.")})
     }
     crawlSlexy() {
 
@@ -282,8 +307,7 @@ class PasteCrawler {
             this.log(`Crawling ${this.websites[i]}...`);
             const opt = {};
             if(this.options.useProxy && proxies[this.options.proxyType].length > 0) opt.agent = new proxyAgent(`${this.options.proxyType}://${proxies[this.options.proxyType][Math.random() * proxies[this.options.proxyType].length>>0]}`);
-            console.log(opt);
-            fetch(this.websites[i], opt).then(res => res.text()) 
+            fetch(this.websites[i], opt).then(res => res.text())
             .then(html => {
                 for(let j in this.regexes) {
                     let dom = new JSDOM(html);
