@@ -1,0 +1,15 @@
+{
+    "_COMMENT": "DON'T CHANGE ANYTHING HERE IF YOU DON'T KNOW HOW IT WORKS",
+    "useProxy": true,
+    "isDefault": false,
+    "proxyType": "socks5",
+    "crawlPastebin": false,
+    "crawlSlexy": false,
+    "crawlPasteDebian": false,
+    "customWebsites": [],
+    "proxyDelimiter": "\n",
+    "filters": {},
+    "maxLog": 256,
+    "runs": {},
+    "repeat": true
+}

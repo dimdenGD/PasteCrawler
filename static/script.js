@@ -8,16 +8,20 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 const { JSDOM } = require("jsdom");
 const sanitizeHTML = require('sanitize-html');
+const proxyAgent = require("proxy-agent");
+const p = l => path.join(__dirname, l);
 
-Object.defineProperty(global.Element.prototype, 'innerText', {
-    get() {
-      return sanitizeHTML(this.textContent, {
-        allowedTags: [],
-        allowedAttributes: {},
-      });
-    },
-    configurable: true,
-  });
+let p_http = fs.readFileSync(p("../dbs/proxy/http.txt"), "utf8").split(config.proxyDelimiter);
+let p_https = fs.readFileSync(p("../dbs/proxy/https.txt"), "utf8").split(config.proxyDelimiter);
+let p_socks4 = fs.readFileSync(p("../dbs/proxy/socks4.txt"), "utf8").split(config.proxyDelimiter);
+let p_socks5 = fs.readFileSync(p("../dbs/proxy/socks5.txt"), "utf8").split(config.proxyDelimiter);
+let proxies = {
+    http: p_http,
+    https: p_https,
+    socks4: p_socks4,
+    socks5: p_socks5
+}
+
 
 geti('minimize').addEventListener('click', () => {
     remote.getCurrentWindow().minimize();
@@ -46,20 +50,30 @@ for(let i of menu) {
     })
 }
 
-fs.readFile(path.join(__dirname, "../dbs/proxy/http.txt"), "utf8", (err, data) => {
+fs.readFile(p("../dbs/proxy/http.txt"), "utf8", (err, data) => {
     geti('proxy-area').value = data;
 })
 let v = "HTTP";
 
 geti("proxy-type").addEventListener("change", () => {
     v = geti('proxy-type').value;
-    fs.readFile(path.join(__dirname, `../dbs/proxy/${v.toLowerCase()}.txt`), "utf8", (err, data) => {
+    fs.readFile(p(`../dbs/proxy/${v.toLowerCase()}.txt`), "utf8", (err, data) => {
         geti('proxy-area').value = data;
     })
 })
 
 geti("proxy-area").addEventListener("change", () => {
-    fs.writeFileSync(path.join(__dirname, `../dbs/proxy/${v.toLowerCase()}.txt`), geti('proxy-area').value)
+    fs.writeFileSync(p(`../dbs/proxy/${v.toLowerCase()}.txt`), geti('proxy-area').value);
+    p_http = fs.readFileSync(p("../dbs/proxy/http.txt"), "utf8").split(config.proxyDelimiter);
+    p_https = fs.readFileSync(p("../dbs/proxy/https.txt"), "utf8").split(config.proxyDelimiter);
+    p_socks4 = fs.readFileSync(p("../dbs/proxy/socks4.txt"), "utf8").split(config.proxyDelimiter);
+    p_socks5 = fs.readFileSync(p("../dbs/proxy/socks5.txt"), "utf8").split(config.proxyDelimiter);
+    proxies = {
+        http: p_http,
+        https: p_https,
+        socks4: p_socks4,
+        socks5: p_socks5
+    }
 })
 
 geti('use-proxy').checked = config.useProxy;
@@ -67,35 +81,42 @@ geti('use-proxy').addEventListener("change", () => {
     config.useProxy = geti('use-proxy').checked;
     config.isDefault = false;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti('crawl-pastebin').checked = config.crawlPastebin;
 geti('crawl-pastebin').addEventListener("change", () => {
     config.crawlPastebin = geti('crawl-pastebin').checked;
     config.isDefault = false;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti('crawl-slexy').checked = config.crawlSlexy;
 geti('crawl-slexy').addEventListener("change", () => {
     config.crawlSlexy = geti('crawl-slexy').checked;
     config.isDefault = false;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti("crawl-pastedebian").checked = config.crawlPasteDebian;
 geti('crawl-pastedebian').addEventListener("change", () => {
     config.crawlPasteDebian = geti('crawl-pastedebian').checked;
     config.isDefault = false;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
+})
+geti("repeat").checked = config.repeat;
+geti('repeat').addEventListener("change", () => {
+    config.repeat = geti('repeat').checked;
+    config.isDefault = false;
+    geti("default").hidden = true;
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti("proxy-type-option").value = config.proxyType;
 geti('proxy-type-option').addEventListener("change", () => {
     config.proxyType = geti('proxy-type-option').value;
     config.isDefault = false;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti('custom-websites').value = config.customWebsites.join(", ");
 geti('custom-websites').addEventListener("change", () => {
@@ -103,21 +124,21 @@ geti('custom-websites').addEventListener("change", () => {
     geti("default").hidden = true;
     config.customWebsites = geti('custom-websites').value.split(", ");
     if(config.customWebsites.length === 1) if(config.customWebsites[0] === "") config.customWebsites = [];
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti('max-log').value = config.maxLog;
 geti('max-log').addEventListener("change", () => {
     config.isDefault = false;
     config.maxLog = +geti('max-log').value;
     geti("default").hidden = true;
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 geti('proxy-delimiter').value = config.proxyDelimiter.replace("\n", "\\n");
 geti('proxy-delimiter').addEventListener("change", () => {
     config.isDefault = false;
     geti("default").hidden = true;
     config.proxyDelimiter = geti('proxy-delimiter').value.replace("\\n", "\n");
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 })
 
 geti("default").hidden = !config.isDefault;
@@ -139,11 +160,11 @@ function addFilter(regex, FS) {
     cm.checked = config.filters[regex];
     if(FS) {
         config.filters[regex] = false;
-        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+        fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
     }
     cm.onchange = () => {
         config.filters[regex] = cm.checked;
-        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+        fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
     };
     td1.appendChild(cm);
     td2.appendChild(rg);
@@ -152,7 +173,7 @@ function addFilter(regex, FS) {
     tr.id = `regex-${regex}`;
     tr.oncontextmenu = () => {
         delete config.filters[regex];
-        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+        fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
         tr.remove();
     }
     geti("filters").appendChild(tr);
@@ -211,7 +232,7 @@ class PasteCrawler {
         this.matches = 0;
         this.regexes = [];
         this.date = Date.now();
-        this.websites = options.customWebsites;
+        this.websites = [...options.customWebsites];
         this.options.filters = filter(this.options.filters, i => i);
         if(Object.keys(this.options.filters).length === 0) {
             this.destruct();
@@ -228,7 +249,7 @@ class PasteCrawler {
         geti("status").className = "on";
 
         config.runs[this.tableName] = 1;
-        fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+        fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
 
         const option = document.createElement("option");
         option.textContent = this.tableName;
@@ -255,11 +276,14 @@ class PasteCrawler {
     }
     crawlCustomWebsites() {
         for(let i in this.websites) {
-            if(db.prepare(`select from1 from "${this.tableName}" where from1 = "${this.websites[i]}"`).all().length !== 0) return;
+            if(db.prepare(`select from1 from "${this.tableName}" where from1 = "${this.websites[i]}"`).all().length !== 0) continue;
             this.crawled++;
             this.update();
             this.log(`Crawling ${this.websites[i]}...`);
-            fetch(this.websites[i]).then(res => res.text()) 
+            const opt = {};
+            if(this.options.useProxy && proxies[this.options.proxyType].length > 0) opt.agent = new proxyAgent(`${this.options.proxyType}://${proxies[this.options.proxyType][Math.random() * proxies[this.options.proxyType].length>>0]}`);
+            console.log(opt);
+            fetch(this.websites[i], opt).then(res => res.text()) 
             .then(html => {
                 for(let j in this.regexes) {
                     let dom = new JSDOM(html);
@@ -277,7 +301,8 @@ class PasteCrawler {
                     if(this.websites.length === 0
                     && !this.options.crawlSlexy
                     && !this.options.crawlPastebin
-                    && !this.options.crawlPasteDebian) {
+                    && !this.options.crawlPasteDebian
+                    && !this.options.repeat) {
                         bot.destruct();
                         bot.log("Everything done.");
                         bot = undefined;
@@ -325,7 +350,7 @@ geti("clean").addEventListener("click", () => {
     if(!confirm("Are you sure that you want to delete everything?")) return;
     fs.writeFileSync(path.join(__dirname, "../dbs/db.db"), "");
     config.runs = {};
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
     geti("table-name").innerHTML = "<option>None</option>";
     geti("table-name").value = "None";
     geti("result").value = "";
@@ -337,7 +362,7 @@ geti("delete").addEventListener("click", () => {
     let tableName = geti("table-name").value;
     if(tableName === "None") return;
     delete config.runs[tableName];
-    fs.writeFileSync(path.join(__dirname, "../dbs/options.json"), JSON.stringify(config, null, 4));
+    fs.writeFileSync(p("../dbs/options.json"), JSON.stringify(config, null, 4));
     db.prepare(`drop table if exists "${tableName}"`).run();
     geti("table-name").value = "None";
     Array.from(geti("table-name").children).forEach(i => {

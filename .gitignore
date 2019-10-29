@@ -2,4 +2,3 @@ node_modules/
 .vscode/
 icon.pdn
 dbs/db.db
-dbs/options.json
